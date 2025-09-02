@@ -153,8 +153,8 @@ copy_scripts() {
 generate_certificates() {
     log_message "${BLUE}Generating SSL certificates...${NC}"
     
-    # Run certificate generation script
-    "$INSTALL_DIR/generate_ssl_cert.sh" generate
+    # Run certificate generation script in auto mode
+    "$INSTALL_DIR/generate_ssl_cert.sh" auto
     
     if [[ $? -eq 0 ]]; then
         log_message "${GREEN}SSL certificates generated successfully${NC}"

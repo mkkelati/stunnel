@@ -39,29 +39,49 @@ create_cert_dir() {
 
 # Get server information
 get_server_info() {
-    echo -e "${BLUE}Setting up SSL certificate for Stunnel${NC}"
-    echo "Please provide the following information:"
-    
-    read -p "Country (2 letter code) [US]: " COUNTRY
-    COUNTRY=${COUNTRY:-US}
-    
-    read -p "State/Province [California]: " STATE
-    STATE=${STATE:-California}
-    
-    read -p "City [San Francisco]: " CITY
-    CITY=${CITY:-San Francisco}
-    
-    read -p "Organization [Your Organization]: " ORG
-    ORG=${ORG:-Your Organization}
-    
-    read -p "Organizational Unit [IT Department]: " OU
-    OU=${OU:-IT Department}
-    
-    read -p "Common Name (server FQDN or IP) [$(hostname -f 2>/dev/null || hostname)]: " CN
-    CN=${CN:-$(hostname -f 2>/dev/null || hostname)}
-    
-    read -p "Email [admin@$(hostname -d 2>/dev/null || echo "example.com")]: " EMAIL
-    EMAIL=${EMAIL:-admin@$(hostname -d 2>/dev/null || echo "example.com")}
+    # Check if running in non-interactive mode (automated installation)
+    if [[ ! -t 0 ]] || [[ "$1" == "--auto" ]]; then
+        echo -e "${BLUE}Generating SSL certificate with default values...${NC}"
+        COUNTRY="US"
+        STATE="California"
+        CITY="San Francisco"
+        ORG="SSH Tunnel Service"
+        OU="IT Department"
+        CN=$(hostname -f 2>/dev/null || hostname -I 2>/dev/null | awk '{print $1}' || echo "localhost")
+        EMAIL="admin@$(hostname -d 2>/dev/null || echo "example.com")"
+        
+        echo -e "${YELLOW}Using default certificate values:${NC}"
+        echo "  Country: $COUNTRY"
+        echo "  State: $STATE"
+        echo "  City: $CITY"
+        echo "  Organization: $ORG"
+        echo "  Common Name: $CN"
+        echo "  Email: $EMAIL"
+    else
+        echo -e "${BLUE}Setting up SSL certificate for Stunnel${NC}"
+        echo "Please provide the following information:"
+        
+        read -p "Country (2 letter code) [US]: " COUNTRY
+        COUNTRY=${COUNTRY:-US}
+        
+        read -p "State/Province [California]: " STATE
+        STATE=${STATE:-California}
+        
+        read -p "City [San Francisco]: " CITY
+        CITY=${CITY:-San Francisco}
+        
+        read -p "Organization [SSH Tunnel Service]: " ORG
+        ORG=${ORG:-SSH Tunnel Service}
+        
+        read -p "Organizational Unit [IT Department]: " OU
+        OU=${OU:-IT Department}
+        
+        read -p "Common Name (server FQDN or IP) [$(hostname -f 2>/dev/null || hostname)]: " CN
+        CN=${CN:-$(hostname -f 2>/dev/null || hostname)}
+        
+        read -p "Email [admin@$(hostname -d 2>/dev/null || echo "example.com")]: " EMAIL
+        EMAIL=${EMAIL:-admin@$(hostname -d 2>/dev/null || echo "example.com")}
+    fi
     
     echo -e "${YELLOW}Certificate will be valid for $CERT_VALIDITY days${NC}"
 }
@@ -236,8 +256,8 @@ generate_ssl_certificate() {
     # Create certificate directory
     create_cert_dir
     
-    # Get server information
-    get_server_info
+    # Get server information (auto mode for non-interactive)
+    get_server_info "--auto"
     
     # Generate certificate components
     create_openssl_config
