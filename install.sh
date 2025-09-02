@@ -104,26 +104,49 @@ create_install_dir() {
     log_message "${GREEN}Installation directory created: $INSTALL_DIR${NC}"
 }
 
-# Copy scripts to installation directory
+# Download and copy scripts to installation directory
 copy_scripts() {
-    log_message "${BLUE}Copying scripts to installation directory...${NC}"
+    log_message "${BLUE}Downloading and copying scripts...${NC}"
     
     local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local github_base="https://raw.githubusercontent.com/mkkelati/stunnel/main"
     
-    # Copy main scripts
-    cp "$script_dir/ssh_user_manager.sh" "$INSTALL_DIR/"
-    cp "$script_dir/generate_ssl_cert.sh" "$INSTALL_DIR/"
-    cp "$script_dir/monitor_cleanup.sh" "$INSTALL_DIR/"
-    cp "$script_dir/menu.sh" "$INSTALL_DIR/"
-    cp "$script_dir/stunnel.conf" "$INSTALL_DIR/"
+    # Check if files exist locally (manual installation)
+    if [[ -f "$script_dir/ssh_user_manager.sh" ]]; then
+        log_message "${BLUE}Using local files...${NC}"
+        # Copy main scripts
+        cp "$script_dir/ssh_user_manager.sh" "$INSTALL_DIR/"
+        cp "$script_dir/generate_ssl_cert.sh" "$INSTALL_DIR/"
+        cp "$script_dir/monitor_cleanup.sh" "$INSTALL_DIR/"
+        cp "$script_dir/menu.sh" "$INSTALL_DIR/"
+        cp "$script_dir/stunnel.conf" "$INSTALL_DIR/"
+    else
+        log_message "${BLUE}Downloading files from GitHub...${NC}"
+        # Download main scripts from GitHub
+        curl -sSL "$github_base/ssh_user_manager.sh" -o "$INSTALL_DIR/ssh_user_manager.sh"
+        curl -sSL "$github_base/generate_ssl_cert.sh" -o "$INSTALL_DIR/generate_ssl_cert.sh"
+        curl -sSL "$github_base/monitor_cleanup.sh" -o "$INSTALL_DIR/monitor_cleanup.sh"
+        curl -sSL "$github_base/menu.sh" -o "$INSTALL_DIR/menu.sh"
+        curl -sSL "$github_base/stunnel.conf" -o "$INSTALL_DIR/stunnel.conf"
+        
+        # Verify downloads
+        for file in ssh_user_manager.sh generate_ssl_cert.sh monitor_cleanup.sh menu.sh stunnel.conf; do
+            if [[ ! -f "$INSTALL_DIR/$file" ]]; then
+                log_message "${RED}Failed to download $file${NC}"
+                exit 1
+            fi
+        done
+        
+        log_message "${GREEN}All files downloaded successfully${NC}"
+    fi
     
     # Make scripts executable
     chmod +x "$INSTALL_DIR"/*.sh
     
     # Copy stunnel config
-    cp "$script_dir/stunnel.conf" "$STUNNEL_CONFIG_DIR/"
+    cp "$INSTALL_DIR/stunnel.conf" "$STUNNEL_CONFIG_DIR/"
     
-    log_message "${GREEN}Scripts copied successfully${NC}"
+    log_message "${GREEN}Scripts setup completed successfully${NC}"
 }
 
 # Generate SSL certificates
