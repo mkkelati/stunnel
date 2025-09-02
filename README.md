@@ -23,13 +23,14 @@ chmod +x install.sh
 sudo ./install.sh install
 ```
 
-### 2. Create Your First User
+### 2. Start the Menu System
 
 ```bash
-# Create user with SSH key authentication (recommended)
-sudo ssh-user-manager create john 30
+# Launch interactive menu (recommended for beginners)
+menu
 
-# Create user with password authentication
+# Or use command line directly
+sudo ssh-user-manager create john 30
 sudo ssh-user-manager create jane 7 --password
 ```
 
@@ -69,12 +70,30 @@ DEFAULT_EXPIRE_DAYS=30          # Default expiration in days
 ALLOW_PASSWORD_AUTH=true        # Allow password authentication
 REQUIRE_KEY_AUTH=true           # Require SSH key authentication
 MIN_PASSWORD_LENGTH=12          # Minimum password length
-STUNNEL_PORT=443                # Stunnel listening port
+STUNNEL_PORT=443                # Stunnel listening port (configurable)
 ```
+
+**Note**: The stunnel port can be changed through the menu system (option 5) or by editing the configuration file. Default is 443 for HTTP Injector compatibility.
 
 ## Commands Reference
 
-### User Management
+### Interactive Menu System
+
+```bash
+# Start the main menu (easiest way to manage the system)
+menu
+```
+
+The menu provides:
+- User creation and deletion
+- User limits and settings management  
+- Stunnel configuration (including port changes)
+- System monitoring and status
+- SSL certificate management
+- Connection information display
+- Installation and updates
+
+### Command Line Interface
 
 ```bash
 # Create new user

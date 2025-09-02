@@ -16,13 +16,14 @@ This will automatically:
 - Configure firewall rules for port 443
 - Install monitoring and cleanup automation
 
-### 👤 Create Your First User
+### 👤 Start Menu System & Create Users
 
 ```bash
-# Create user with SSH key (recommended)
-sudo ssh-user-manager create john 30
+# Launch interactive menu (easiest way)
+menu
 
-# Create user with password
+# Or create users directly via command line
+sudo ssh-user-manager create john 30
 sudo ssh-user-manager create jane 7 --password
 ```
 
@@ -48,17 +49,14 @@ sudo ssh-user-manager create jane 7 --password
 ### 📊 Management Commands
 
 ```bash
-# List all users
-ssh-user-manager list
+# Interactive menu system (recommended)
+menu
 
-# Check system status
-ssh-user-manager status
-
-# Monitor system health
-ssh-monitor status
-
-# View active sessions
-ssh-monitor sessions
+# Command line options
+ssh-user-manager list          # List all users
+ssh-user-manager status        # Check system status
+ssh-monitor status             # Monitor system health
+ssh-monitor sessions           # View active sessions
 ```
 
 ### 🔧 Configuration
@@ -66,8 +64,10 @@ ssh-monitor sessions
 Default settings in `/opt/ssh-user-manager/manager.conf`:
 - Max users: 50
 - Default expiration: 30 days
-- Port: 443
+- Port: 443 (configurable through menu)
 - Auto-cleanup: Every 6 hours
+
+**💡 Tip**: Use the menu system to easily change the stunnel port and other settings!
 
 ### 📞 Connection Test
 

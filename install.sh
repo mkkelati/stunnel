@@ -114,6 +114,7 @@ copy_scripts() {
     cp "$script_dir/ssh_user_manager.sh" "$INSTALL_DIR/"
     cp "$script_dir/generate_ssl_cert.sh" "$INSTALL_DIR/"
     cp "$script_dir/monitor_cleanup.sh" "$INSTALL_DIR/"
+    cp "$script_dir/menu.sh" "$INSTALL_DIR/"
     cp "$script_dir/stunnel.conf" "$INSTALL_DIR/"
     
     # Make scripts executable
@@ -262,6 +263,7 @@ create_symlinks() {
     ln -sf "$INSTALL_DIR/ssh_user_manager.sh" "/usr/local/bin/ssh-user-manager"
     ln -sf "$INSTALL_DIR/generate_ssl_cert.sh" "/usr/local/bin/ssl-cert-manager"
     ln -sf "$INSTALL_DIR/monitor_cleanup.sh" "/usr/local/bin/ssh-monitor"
+    ln -sf "$INSTALL_DIR/menu.sh" "/usr/local/bin/menu"
     
     log_message "${GREEN}Symbolic links created${NC}"
 }
@@ -356,6 +358,7 @@ show_summary() {
     echo "SSL certificate: $STUNNEL_CONFIG_DIR/stunnel.pem"
     echo ""
     echo -e "${YELLOW}Available Commands:${NC}"
+    echo "  menu                                    # Interactive menu system"
     echo "  ssh-user-manager create <username> [days] [--password]"
     echo "  ssh-user-manager delete <username>"
     echo "  ssh-user-manager list"
@@ -388,10 +391,11 @@ show_summary() {
     
     echo ""
     echo -e "${BLUE}Next Steps:${NC}"
-    echo "1. Create your first user: ssh-user-manager create testuser 7"
-    echo "2. Test the connection from a client"
-    echo "3. Configure monitoring alerts by editing EMAIL_ALERTS in monitor_cleanup.sh"
-    echo "4. Review and adjust configuration in $INSTALL_DIR/manager.conf"
+    echo "1. Start the menu system: menu"
+    echo "2. Create your first user: ssh-user-manager create testuser 7"
+    echo "3. Test the connection from a client"
+    echo "4. Configure monitoring alerts by editing EMAIL_ALERTS in monitor_cleanup.sh"
+    echo "5. Review and adjust configuration in $INSTALL_DIR/manager.conf"
     echo ""
     echo "Installation log: $LOG_FILE"
 }
