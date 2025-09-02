@@ -4,8 +4,12 @@
 
 ### ⚡ Quick Installation
 
-Copy and run this single command on your Linux server:
+**Method 1: Reliable One-Click Install (Recommended)**
+```bash
+curl -sSL https://raw.githubusercontent.com/mkkelati/stunnel/main/quick_install.sh | sudo bash
+```
 
+**Method 2: Alternative Install**
 ```bash
 curl -sSL https://raw.githubusercontent.com/mkkelati/stunnel/main/install.sh | sudo bash -s install
 ```
